@@ -515,6 +515,11 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             // refresh button label
             $scope.refreshButton = function() {
 
+		if ( $scope.lang.staticLabel ) {
+		    $scope.varButtonLabel = $sce.trustAsHtml( $scope.lang.staticLabel + '<span class="caret"></span>' );
+		    return;
+		}
+
                 $scope.varButtonLabel   = '';
                 var ctr                 = 0;
 
@@ -958,6 +963,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 $scope.lang.reset           = $sce.trustAsHtml( $scope.icon.reset      + '&nbsp;&nbsp;' + $scope.translation.reset );
                 $scope.lang.search          = $scope.translation.search;
                 $scope.lang.nothingSelected = $sce.trustAsHtml( $scope.translation.nothingSelected );
+                $scope.lang.staticLabel     = $sce.trustAsHtml( $scope.translation.staticLabel );
             }
             else {
                 $scope.lang.selectAll       = $sce.trustAsHtml( $scope.icon.selectAll  + '&nbsp;&nbsp;Select All' );
@@ -1031,36 +1037,36 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
     }
 }]).run( [ '$templateCache' , function( $templateCache ) {
     var template =
-        '<span class="multiSelect inlineBlock">' +
+        '<div class="multiSelect inlineBlock dropdown">' +
             // main button
-            '<button id="{{directiveId}}" type="button"' +
+            '<button id="{{directiveId}}" type="button" class="btn-reset btn btn-default"' +
                 'ng-click="toggleCheckboxes( $event ); refreshSelectedItems(); refreshButton(); prepareGrouping; prepareIndex();"' +
                 'ng-bind-html="varButtonLabel"' +
                 'ng-disabled="disable-button"' +
             '>' +
             '</button>' +
             // overlay layer
-            '<div class="checkboxLayer">' +
+            '<div class="checkboxLayer dropdown-menu">' +
                 // container of the helper elements
                 '<div class="helperContainer" ng-if="helperStatus.filter || helperStatus.all || helperStatus.none || helperStatus.reset ">' +
                     // container of the first 3 buttons, select all, none and reset
                     '<div class="line" ng-if="helperStatus.all || helperStatus.none || helperStatus.reset ">' +
                         // select all
-                        '<button type="button" class="helperButton"' +
+                        '<button type="button" class="btn-reset helperButton"' +
                             'ng-disabled="isDisabled"' +
                             'ng-if="helperStatus.all"' +
                             'ng-click="select( \'all\', $event );"' +
                             'ng-bind-html="lang.selectAll">' +
                         '</button>'+
                         // select none
-                        '<button type="button" class="helperButton"' +
+                        '<button type="button" class="btn-reset helperButton"' +
                             'ng-disabled="isDisabled"' +
                             'ng-if="helperStatus.none"' +
                             'ng-click="select( \'none\', $event );"' +
                             'ng-bind-html="lang.selectNone">' +
                         '</button>'+
                         // reset
-                        '<button type="button" class="helperButton reset"' +
+                        '<button type="button" class="btn-reset helperButton reset"' +
                             'ng-disabled="isDisabled"' +
                             'ng-if="helperStatus.reset"' +
                             'ng-click="select( \'reset\', $event );"' +
@@ -1076,7 +1082,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                             'ng-change="searchChanged()" class="inputFilter"'+
                             '/>'+
                         // clear button
-                        '<button type="button" class="clearButton" ng-click="clearClicked( $event )" >×</button> '+
+                        '<button type="button" class="btn-reset clearButton" ng-click="clearClicked( $event )" >×</button> '+
                     '</div> '+
                 '</div> '+
                 // selection items
@@ -1108,6 +1114,6 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 '</div>'+
             '</div>'+
         '</div>'+
-    '</span>';
+    '</div>';
 	$templateCache.put( 'isteven-multi-select.htm' , template );
 }]);
